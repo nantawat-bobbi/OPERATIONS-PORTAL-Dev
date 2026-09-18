@@ -1,0 +1,1373 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ไทม์ไลน์เปิดสาขา</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#FFFCF6;
+    --surface:#FFFFFF;
+    --surface-2:#FFF6E6;
+    --surface-3:#FBEFD8;
+    --ink:#2A2016;
+    --ink-soft:#4A3D2C;
+    --ink-muted:#8A7A62;
+    --border:#EEE0C6;
+    --border-strong:#E2CFA8;
+
+    --violet:#7C3AED; --violet-bg:#F1E9FE;
+    --sky:#0284C7;    --sky-bg:#E3F3FC;
+    --rose:#BE185D;   --rose-bg:#FCE6EF;
+    --gold:#CA8A04;   --gold-bg:#FCF0D2;
+
+    --st-progress:#4F46E5; --st-progress-bg:#EAE8FC;
+    --st-warning:#D97706;  --st-warning-bg:#FCEDD3;
+    --st-danger:#DC2626;   --st-danger-bg:#FBE2E1;
+    --st-success:#059669;  --st-success-bg:#DFF3EC;
+    --st-pending:#64748B;  --st-pending-bg:#E9ECEF;
+    --st-hold:#78716C;     --st-hold-bg:#EFEBE8;
+
+    --shadow-card: 0 1px 2px rgba(42,32,22,.06), 0 6px 16px -8px rgba(42,32,22,.16);
+    --shadow-pop: 0 12px 32px -10px rgba(42,32,22,.35);
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 9px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17130E; --surface:#221C14; --surface-2:#251F17; --surface-3:#2B2419;
+      --ink:#F5EEDF; --ink-soft:#E4D9C4; --ink-muted:#AD9E82;
+      --border:#3A3021; --border-strong:#4A3D28;
+
+      --violet:#9333EA; --violet-bg:#2C2140;
+      --sky:#0284C7;    --sky-bg:#182C38;
+      --rose:#DB2777;   --rose-bg:#3A1B2A;
+      --gold:#D97706;   --gold-bg:#392B12;
+
+      --st-progress:#818CF8; --st-progress-bg:#26264A;
+      --st-warning:#FBBF24;  --st-warning-bg:#3A2E10;
+      --st-danger:#F87171;   --st-danger-bg:#3B1D1B;
+      --st-success:#34D399;  --st-success-bg:#173328;
+      --st-pending:#94A3B8;  --st-pending-bg:#262B32;
+      --st-hold:#A8A29E;     --st-hold-bg:#2B2723;
+
+      --shadow-card: 0 1px 2px rgba(0,0,0,.3), 0 8px 20px -10px rgba(0,0,0,.5);
+      --shadow-pop: 0 16px 36px -10px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17130E; --surface:#221C14; --surface-2:#251F17; --surface-3:#2B2419;
+    --ink:#F5EEDF; --ink-soft:#E4D9C4; --ink-muted:#AD9E82;
+    --border:#3A3021; --border-strong:#4A3D28;
+
+    --violet:#9333EA; --violet-bg:#2C2140;
+    --sky:#0284C7;    --sky-bg:#182C38;
+    --rose:#DB2777;   --rose-bg:#3A1B2A;
+    --gold:#D97706;   --gold-bg:#392B12;
+
+    --st-progress:#818CF8; --st-progress-bg:#26264A;
+    --st-warning:#FBBF24;  --st-warning-bg:#3A2E10;
+    --st-danger:#F87171;   --st-danger-bg:#3B1D1B;
+    --st-success:#34D399;  --st-success-bg:#173328;
+    --st-pending:#94A3B8;  --st-pending-bg:#262B32;
+    --st-hold:#A8A29E;     --st-hold-bg:#2B2723;
+
+    --shadow-card: 0 1px 2px rgba(0,0,0,.3), 0 8px 20px -10px rgba(0,0,0,.5);
+    --shadow-pop: 0 16px 36px -10px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Prompt','Noto Sans Thai',system-ui,sans-serif;
+    font-weight:400;
+    margin:0;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{
+    max-width:1180px;
+    margin:0 auto;
+    padding:20px 16px 64px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+  h1,h2,h3{margin:0; text-wrap:balance;}
+  button{font-family:inherit;}
+  ::selection{background:var(--gold-bg);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(120% 160% at 8% 0%, var(--gold-bg) 0%, transparent 55%),
+      radial-gradient(120% 160% at 100% 0%, var(--violet-bg) 0%, transparent 55%),
+      var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    padding:26px 24px;
+    box-shadow:var(--shadow-card);
+    overflow:hidden;
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .hero-text{display:flex; flex-direction:column; gap:8px; min-width:240px;}
+  .hero-eyebrow{
+    font-size:12.5px; font-weight:600; letter-spacing:.08em;
+    color:var(--gold); text-transform:uppercase;
+    display:flex; align-items:center; gap:6px;
+  }
+  .hero h1{
+    font-family:'Prompt',sans-serif;
+    font-weight:700;
+    font-size:clamp(26px,4vw,38px);
+    line-height:1.15;
+    color:var(--ink);
+  }
+  .hero p{margin:0; color:var(--ink-muted); font-size:14.5px; max-width:52ch; line-height:1.6;}
+  .hero-right{display:flex; flex-direction:column; align-items:flex-end; gap:10px;}
+  .hero-badge{
+    display:flex; align-items:center; gap:8px;
+    background:var(--surface-2); border:1px solid var(--border-strong);
+    border-radius:100px; padding:8px 14px; font-size:12.5px; color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .hero-badge b{color:var(--ink); font-weight:600;}
+  .retry-btn{
+    display:none; align-items:center; gap:6px;
+    background:var(--surface-2); border:1px solid var(--border-strong);
+    border-radius:100px; padding:7px 14px; font-size:12.5px; font-weight:600; color:var(--ink);
+    cursor:pointer; white-space:nowrap; font-family:'Prompt',sans-serif;
+  }
+  .retry-btn:hover{background:var(--surface-3, var(--surface-2)); border-color:var(--ink-soft);}
+  .retry-btn.is-visible{display:inline-flex;}
+  .retry-btn.is-spinning{opacity:.65; pointer-events:none;}
+  .dot-live{width:7px; height:7px; border-radius:50%; background:var(--st-success); box-shadow:0 0 0 3px var(--st-success-bg); flex:none;}
+  .btn-admin{
+    display:flex; align-items:center; gap:7px; white-space:nowrap;
+    background:var(--ink); color:var(--bg); border:none; border-radius:100px;
+    padding:10px 16px; font-size:13px; font-weight:600; cursor:pointer;
+    box-shadow:var(--shadow-card);
+  }
+  .btn-admin:hover{opacity:.88;}
+
+  /* ---------- KPI tiles ---------- */
+  .kpis{ display:grid; grid-template-columns:repeat(6,1fr); gap:10px; }
+  @media (max-width:900px){ .kpis{grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:520px){ .kpis{grid-template-columns:repeat(2,1fr);} }
+  .kpi{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:14px 14px 12px; display:flex; flex-direction:column; gap:6px;
+    box-shadow:var(--shadow-card); cursor:pointer; transition:transform .12s ease, border-color .12s ease;
+  }
+  .kpi:hover{transform:translateY(-2px); border-color:var(--border-strong);}
+  .kpi.is-active{outline:2px solid var(--kpi-color,var(--ink)); outline-offset:-2px;}
+  .kpi-top{display:flex; align-items:center; justify-content:space-between;}
+  .kpi-emoji{font-size:19px;}
+  .kpi-num{font-family:'Prompt',sans-serif; font-variant-numeric:tabular-nums; font-size:26px; font-weight:700; color:var(--ink);}
+  .kpi-label{font-size:12px; color:var(--ink-muted); font-weight:500;}
+
+  /* ---------- Overview bar ---------- */
+  .overview{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:16px 18px; box-shadow:var(--shadow-card); display:flex; flex-direction:column; gap:10px;
+  }
+  .overview-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  .overview-head h2{font-size:15px; font-weight:600;}
+  .overview-track{
+    display:flex; width:100%; height:14px; border-radius:100px; overflow:hidden;
+    background:var(--surface-2); border:1px solid var(--border);
+  }
+  .overview-seg{height:100%; transition:width .3s ease;}
+  .overview-legend{display:flex; flex-wrap:wrap; gap:10px 16px;}
+  .legend-item{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft);}
+  .legend-swatch{width:9px; height:9px; border-radius:3px; flex:none;}
+
+  /* ---------- Filters ---------- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+  .filter-group{display:flex; flex-wrap:wrap; gap:6px;}
+  .chip{
+    border:1px solid var(--border-strong); background:var(--surface); color:var(--ink-soft);
+    border-radius:100px; padding:7px 13px; font-size:12.5px; font-weight:500;
+    cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .12s ease;
+    white-space:nowrap;
+  }
+  .chip:hover{border-color:var(--ink-muted);}
+  .chip.is-on{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+  .search-box{
+    margin-left:auto; display:flex; align-items:center; gap:6px;
+    background:var(--surface); border:1px solid var(--border-strong); border-radius:100px;
+    padding:7px 14px; font-size:13px; min-width:180px;
+  }
+  .search-box input{border:none; outline:none; background:transparent; color:var(--ink); font-family:inherit; width:100%; font-size:13px;}
+  .search-box input::placeholder{color:var(--ink-muted);}
+
+  /* ---------- Month groups ---------- */
+  .month-group{display:flex; flex-direction:column; gap:12px; margin-bottom:18px;}
+  .month-head{ display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:2; background:var(--bg); padding:6px 2px; }
+  .month-head h3{ font-size:16px; font-weight:600; color:var(--ink); display:flex; align-items:center; gap:8px; }
+  .month-head .count{font-size:12px; color:var(--ink-muted); font-weight:500;}
+  .month-line{flex:1; height:1px; background:var(--border-strong);}
+  .card-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:14px; }
+
+  /* ---------- Project card ---------- */
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-card); padding:16px; display:flex; flex-direction:column; gap:12px;
+    border-top:3px solid var(--card-accent, var(--border-strong));
+  }
+  .card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:8px;}
+  .card-title{display:flex; align-items:center; gap:9px; min-width:0;}
+  .card-emoji{font-size:22px; flex:none;}
+  .card-title h4{font-size:16.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .card-owner{font-size:11.5px; color:var(--ink-muted); font-weight:500;}
+  .card-head-right{display:flex; align-items:center; gap:6px; flex:none;}
+
+  .status-pill{
+    display:flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600;
+    padding:5px 10px; border-radius:100px; white-space:nowrap; flex:none;
+    color:var(--pill-fg); background:var(--pill-bg);
+  }
+  .card-del{
+    border:none; background:var(--surface-2); color:var(--ink-muted); border-radius:100px;
+    width:26px; height:26px; font-size:12px; cursor:pointer; flex:none;
+  }
+  .card-del.is-confirm{background:var(--st-danger-bg); color:var(--st-danger); font-weight:700; width:auto; padding:0 9px; font-size:11px;}
+  .card-del:disabled{cursor:not-allowed; opacity:.5;}
+
+  .stage-row{display:flex; flex-direction:column; gap:7px;}
+  .stage{ display:flex; align-items:center; gap:9px; padding:6px 8px; border-radius:var(--radius-sm); background:var(--surface-2); }
+  .stage.is-current{background:var(--surface-3); box-shadow:inset 0 0 0 1px var(--border-strong);}
+  .stage-check{
+    width:19px; height:19px; border-radius:6px; border:1.6px solid var(--border-strong);
+    background:var(--surface); flex:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:12px; line-height:1;
+  }
+  .stage-check:disabled{cursor:default; opacity:.55;}
+  .stage-check.is-done{background:var(--stage-color); border-color:var(--stage-color);}
+  .stage-icon{font-size:14px; flex:none;}
+  .stage-label{font-size:12.5px; color:var(--ink-soft); font-weight:500; flex:1; min-width:0;}
+  .stage-label small{display:block; color:var(--ink-muted); font-weight:400; font-size:11px;}
+  .stage-date-wrap{display:flex; align-items:center; gap:4px; flex:none;}
+  .stage-date{
+    font-size:12px; font-variant-numeric:tabular-nums; color:var(--ink); font-weight:500;
+    border:none; background:transparent; font-family:inherit; text-align:right; width:100px; cursor:pointer;
+    border-radius:6px; padding:2px 4px;
+  }
+  .stage-date:hover{background:var(--surface);}
+  .stage-date:disabled{cursor:not-allowed; opacity:.55;}
+  .stage-note{font-size:11.5px; color:var(--ink-muted);}
+  .stage-unskip{
+    border:1px dashed var(--border-strong); background:transparent; color:var(--ink-muted);
+    font-size:10.5px; border-radius:100px; padding:2px 8px; cursor:pointer; white-space:nowrap;
+  }
+  .stage-unskip:hover{color:var(--ink); border-color:var(--ink-muted);}
+  .stage-unskip:disabled{cursor:not-allowed; opacity:.55;}
+  .stage-owner-chip{
+    font-size:10px; font-weight:600; padding:2px 7px; border-radius:100px; flex:none;
+    color:var(--chip-fg); background:var(--chip-bg);
+  }
+
+  .card-notes{display:flex; flex-direction:column; gap:5px;}
+  .card-notes label, .photo-head label{font-size:11px; color:var(--ink-muted); font-weight:600; letter-spacing:.02em;}
+  .card-notes textarea{
+    resize:vertical; min-height:34px; border:1px dashed var(--border-strong); border-radius:var(--radius-sm);
+    background:var(--surface-2); color:var(--ink); font-family:inherit; font-size:12.5px; padding:8px 10px;
+  }
+  .card-notes textarea:focus{outline:none; border-color:var(--ink-muted); background:var(--surface);}
+  .card-notes textarea:read-only{cursor:not-allowed; opacity:.6;}
+
+  /* ---------- Photo gallery ---------- */
+  .photo-section{display:flex; flex-direction:column; gap:6px;}
+  .photo-strip{display:flex; gap:8px; overflow-x:auto; padding-bottom:2px;}
+  .photo-thumb-wrap{position:relative; flex:none; width:62px; height:62px;}
+  .photo-thumb{width:100%; height:100%; object-fit:cover; border-radius:var(--radius-sm); border:1px solid var(--border); cursor:zoom-in; display:block;}
+  .photo-del{
+    position:absolute; top:-6px; right:-6px; width:18px; height:18px; border-radius:50%;
+    border:1px solid var(--border); background:var(--surface); color:var(--st-danger); font-size:10px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-card);
+  }
+  .photo-add{
+    flex:none; width:62px; height:62px; border-radius:var(--radius-sm); border:1.5px dashed var(--border-strong);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+    color:var(--ink-muted); font-size:16px; cursor:pointer; background:var(--surface-2);
+  }
+  .photo-add span{font-size:9px; font-weight:600;}
+  .photo-add:hover{border-color:var(--ink-muted); color:var(--ink);}
+
+  /* ---------- Hold section ---------- */
+  .hold-section{ background:var(--surface-2); border:1px dashed var(--border-strong); border-radius:var(--radius-lg); padding:18px; display:flex; flex-direction:column; gap:12px; }
+  .hold-section h2{font-size:15px; font-weight:600; display:flex; align-items:center; gap:8px;}
+  .hold-cards{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:12px;}
+  .hold-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:13px 14px; display:flex; flex-direction:column; gap:6px; opacity:.85; }
+  .hold-card h5{font-size:14.5px; font-weight:600; display:flex; align-items:center; gap:7px;}
+  .hold-card p{margin:0; font-size:12px; color:var(--ink-muted); line-height:1.6;}
+
+  .footnote{text-align:center; font-size:11.5px; color:var(--ink-muted); padding-top:4px;}
+  .footnote span{opacity:.7;}
+  .empty-msg{padding:24px; text-align:center; color:var(--ink-muted); font-size:13px;}
+
+  /* ---------- Table view ---------- */
+  .table-wrap{
+    overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-lg);
+    background:var(--surface); box-shadow:var(--shadow-card); -webkit-overflow-scrolling:touch;
+  }
+  .table-wrap table{width:100%; border-collapse:collapse; font-size:12px;}
+  .table-wrap thead th{
+    position:sticky; top:0; background:var(--surface-2); font-weight:600; color:var(--ink-soft);
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.03em; padding:10px 11px;
+    text-align:left; white-space:nowrap; border-bottom:1px solid var(--border-strong);
+  }
+  .table-wrap tbody td{padding:9px 11px; white-space:nowrap; border-bottom:1px solid var(--border); color:var(--ink-soft);}
+  .table-wrap tbody tr:hover{background:var(--surface-2);}
+  .table-wrap tbody tr:last-child td{border-bottom:none;}
+  .table-name{font-weight:600; color:var(--ink); display:flex; align-items:center; gap:6px;}
+  .table-cell-muted{color:var(--ink-muted);}
+  .table-cell-done{color:var(--st-success); font-weight:500;}
+
+  /* ---------- Modal (back office) ---------- */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(20,15,8,.55); backdrop-filter:blur(2px);
+    padding:5vh 16px; z-index:50; overflow-y:auto;
+  }
+  .modal-backdrop:not([hidden]){ display:flex; align-items:flex-start; justify-content:center; }
+  .modal{
+    background:var(--surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-pop);
+    width:100%; max-width:640px; display:flex; flex-direction:column; max-height:90vh; border:1px solid var(--border);
+  }
+  .modal-head{display:flex; align-items:center; justify-content:space-between; padding:18px 20px 0;}
+  .modal-head h2{font-family:'Prompt',sans-serif; font-weight:700; font-size:19px;}
+  .modal-close{border:none; background:var(--surface-2); color:var(--ink-muted); width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:14px;}
+  .modal-tabs{display:flex; gap:6px; padding:14px 20px 0;}
+  .tab-btn{ border:1px solid var(--border-strong); background:var(--surface-2); color:var(--ink-soft); border-radius:100px; padding:7px 14px; font-size:12.5px; font-weight:600; cursor:pointer; }
+  .tab-btn.is-on{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+  .modal-body{padding:16px 20px 20px; overflow-y:auto; display:flex; flex-direction:column; gap:16px;}
+
+  .field{display:flex; flex-direction:column; gap:5px;}
+  .field label{font-size:12px; color:var(--ink-muted); font-weight:600;}
+  .input-text, .input-select, .input-date2{
+    border:1px solid var(--border-strong); background:var(--surface-2); color:var(--ink);
+    border-radius:var(--radius-sm); padding:9px 11px; font-family:inherit; font-size:13.5px;
+  }
+  .input-text:focus, .input-select:focus, .input-date2:focus{outline:none; border-color:var(--ink-muted); background:var(--surface);}
+  .form-2col{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:480px){ .form-2col{grid-template-columns:1fr;} }
+  .emoji-pick{display:flex; flex-wrap:wrap; gap:6px;}
+  .emoji-opt{ width:36px; height:36px; border-radius:10px; border:1.5px solid var(--border-strong); background:var(--surface-2); font-size:17px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .emoji-opt.is-on{border-color:var(--gold); background:var(--gold-bg);}
+
+  .stage-form-list{display:flex; flex-direction:column; gap:7px; background:var(--surface-2); border-radius:var(--radius-md); padding:10px;}
+  .stage-form-row{display:grid; grid-template-columns:20px 1fr 1fr 130px; gap:7px; align-items:center;}
+  @media (max-width:480px){ .stage-form-row{grid-template-columns:16px 1fr; grid-template-areas:"icon label" "sel sel" "date date";} .stage-form-row .sfr-select{grid-area:sel;} .stage-form-row .sfr-date{grid-area:date;} }
+  .sfr-icon{font-size:13px; text-align:center;}
+  .sfr-label{font-size:12px; color:var(--ink-soft); font-weight:500;}
+  .stage-form-row select, .stage-form-row input{ font-size:12px; padding:6px 7px; border-radius:8px; border:1px solid var(--border-strong); background:var(--surface); color:var(--ink); font-family:inherit; }
+
+  .btn-primary{ border:none; background:var(--gold); color:#241a02; font-weight:700; border-radius:100px; padding:11px 18px; font-size:13.5px; cursor:pointer; box-shadow:var(--shadow-card); }
+  .btn-primary:hover{opacity:.92;}
+  .btn-ghost{ border:1px solid var(--border-strong); background:transparent; color:var(--ink-soft); border-radius:100px; padding:9px 15px; font-size:12.5px; cursor:pointer; }
+
+  .team-list{display:flex; flex-direction:column; gap:8px;}
+  .team-row{ display:flex; align-items:center; gap:10px; background:var(--surface-2); border-radius:var(--radius-sm); padding:9px 12px; }
+  .team-swatch{width:10px; height:10px; border-radius:50%; flex:none;}
+  .team-name{font-size:13px; font-weight:600; flex:1;}
+  .team-role{font-size:11px; color:var(--ink-muted);}
+  .add-team-form{display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end;}
+  .add-team-form .field{flex:1; min-width:120px;}
+
+  .hint{font-size:11.5px; color:var(--ink-muted); line-height:1.6;}
+
+  /* ---------- Lightbox & toast ---------- */
+  .lightbox-backdrop{ position:fixed; inset:0; background:rgba(10,8,4,.82); z-index:60; padding:24px; }
+  .lightbox-backdrop:not([hidden]){ display:flex; align-items:center; justify-content:center; }
+  .lightbox-img{max-width:100%; max-height:100%; border-radius:var(--radius-md); box-shadow:var(--shadow-pop);}
+  .lightbox-close{ position:absolute; top:18px; right:20px; width:36px; height:36px; border-radius:50%; border:none; background:var(--surface); color:var(--ink); font-size:16px; cursor:pointer; }
+  .toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--bg);
+    padding:10px 18px; border-radius:100px; font-size:12.5px; z-index:70; box-shadow:var(--shadow-pop);
+  }
+
+  @media (max-width:520px){
+    .hero{padding:20px 18px;}
+    .search-box{margin-left:0; width:100%;}
+    .stage-date{width:104px; font-size:11.5px;}
+    .stage-owner-chip{padding:2px 5px; font-size:9.5px;}
+    .stage-label{font-size:12px;}
+  }
+</style>
+</head>
+<body>
+
+
+<div class="page">
+
+  <header class="hero">
+    <div class="hero-text">
+      <div class="hero-eyebrow">🪷 ระบบติดตามงานสาขาใหม่</div>
+      <h1>ไทม์ไลน์เปิดสาขา</h1>
+      <p>ตามงานออกแบบ ✏️ งานระบบ ⚙️ งานหน้างาน 🏗️ จนถึงวันฤกษ์เปิด 🙏 ของทุกสาขาในที่เดียว แตะติ๊กเมื่อทำเสร็จ แนบรูปความคืบหน้า และแก้ไขข้อมูลได้ทันที ระบบจะคำนวณสถานะให้อัตโนมัติ</p>
+    </div>
+    <div class="hero-right">
+      <button class="btn-admin" id="openAdminBtn">🔧 หลังบ้าน</button>
+      <div class="hero-badge"><span class="dot-live" id="liveDot"></span><span id="liveLabel">กำลังซิงก์ข้อมูล…</span> · <b id="todayLabel">–</b></div>
+      <button type="button" class="retry-btn" id="retryConnBtn">🔄 ลองเชื่อมต่อใหม่</button>
+    </div>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="สรุปสถานะทั้งหมด"></section>
+
+  <section class="overview">
+    <div class="overview-head">
+      <h2>🌈 ภาพรวมสถานะสาขา</h2>
+      <span class="footnote" style="padding:0;" id="overviewTotal"></span>
+    </div>
+    <div class="overview-track" id="overviewTrack"></div>
+    <div class="overview-legend" id="overviewLegend"></div>
+  </section>
+
+  <section class="filters" aria-label="ตัวกรอง">
+    <div class="filter-group" id="ownerFilters"></div>
+    <div class="filter-group" id="statusFilters"></div>
+    <div class="filter-group" id="viewToggle">
+      <button class="chip" data-view="cards">🗂️ การ์ด</button>
+      <button class="chip" data-view="table">🧾 ตาราง (ดูรวดเดียว)</button>
+    </div>
+    <button class="chip" id="exportBtn">⬇️ Export CSV</button>
+    <div class="search-box">🔎<input id="searchInput" type="text" placeholder="ค้นหาชื่อสาขา…"></div>
+  </section>
+
+  <main id="board"></main>
+
+  <section class="hold-section">
+    <h2>⏸️ โครงการที่พักไว้</h2>
+    <div class="hold-cards" id="holdCards"></div>
+  </section>
+
+  <p class="footnote">แดชบอร์ดนี้บันทึกการติ๊ก/แก้วันที่/รูปให้อัตโนมัติ <span>· กด “หลังบ้าน” เพื่อเพิ่มสาขาใหม่หรือเพิ่มคนทำ</span></p>
+</div>
+
+<div id="adminBackdrop" class="modal-backdrop" hidden></div>
+<div id="lightboxBackdrop" class="lightbox-backdrop" hidden></div>
+<div id="toastHost"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  function esc(s){
+    return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  /* ============== TEAM ============== */
+  var ROLE_META = {
+    design:{ label:"ออกแบบ", icon:"✏️", color:"violet" },
+    system:{ label:"งานระบบ", icon:"⚙️", color:"sky" },
+    construction:{ label:"หน้างาน/ก่อสร้าง", icon:"🏗️", color:"rose" },
+    opening:{ label:"ฤกษ์เปิด", icon:"🙏", color:"gold" }
+  };
+  var SEED_TEAM = [
+    { id:"pidol", name:"พี่ดล", role:"design" },
+    { id:"khunoy", name:"คุณออย", role:"design" },
+    { id:"pikorn", name:"พี่กร", role:"system" },
+    { id:"pitan", name:"พี่ตาล", role:"construction" },
+    { id:"luangpor", name:"หลวงพ่อ", role:"opening" }
+  ];
+  var COLOR_VAR = { violet:"var(--violet)", sky:"var(--sky)", rose:"var(--rose)", gold:"var(--gold)" };
+  var COLOR_BG  = { violet:"var(--violet-bg)", sky:"var(--sky-bg)", rose:"var(--rose-bg)", gold:"var(--gold-bg)" };
+
+  var STAGE_DEFS = [
+    { key:"start", label:"เริ่มงาน", icon:"🚦", role:"design" },
+    { key:"draft", label:"แบบร่าง", icon:"✏️", role:"design" },
+    { key:"delivery", label:"นัดส่งงาน", icon:"📦", role:"design" },
+    { key:"system", label:"งานระบบ (+3 วัน)", icon:"⚙️", role:"system" },
+    { key:"entry", label:"เข้างาน", icon:"🔑", role:"construction" },
+    { key:"construction", label:"ก่อสร้าง", icon:"🏗️", role:"construction" },
+    { key:"opening", label:"ฤกษ์เปิด", icon:"🙏", role:"opening" }
+  ];
+
+  var OWNER_COLOR_SEED = { "พี่ดล":"violet", "คุณออย":"violet", "พี่กร":"sky", "พี่ตาล":"rose", "หลวงพ่อ":"gold" };
+  function mk(key,label,icon,owner,date,opts){
+    opts = opts || {};
+    return { key:key, label:label, icon:icon, owner:owner, color:OWNER_COLOR_SEED[owner]||"violet",
+      date: date || null, done: !!opts.done, skip: !!opts.skip, note: opts.note || null };
+  }
+
+  var SEED_PROJECTS = [
+    { id:"nakhonsri", order:1, owner:"พี่ดล", month:"กันยายน 2569", monthKey:"2026-09", name:"นครศรี", emoji:"🛕", notes:"", photos:[],
+      stages:[
+        mk("start","เริ่มงาน","🚦","พี่ดล",null,{skip:true, note:"ยังไม่ระบุ"}),
+        mk("draft","แบบร่าง","✏️","พี่ดล","2026-09-18"),
+        mk("delivery","นัดส่งงาน","📦","พี่ดล","2026-09-20"),
+        mk("system","งานระบบ (+3 วัน)","⚙️","พี่กร","2026-09-23"),
+        mk("entry","เข้างาน","🔑","พี่ตาล","2026-09-10",{done:true, note:"เริ่มแล้ว 10 ก.ย."}),
+        mk("construction","ก่อสร้าง","🏗️","พี่ตาล",null,{skip:true, note:"รอระบุระยะเวลา"}),
+        mk("opening","ฤกษ์เปิด","🙏","หลวงพ่อ","2026-11-26")
+      ]},
+    { id:"centralw", order:2, owner:"พี่ดล", month:"กันยายน 2569", monthKey:"2026-09", name:"Cen w.", emoji:"🏬", notes:"", photos:[],
+      stages:[
+        mk("start","เริ่มงาน","🚦","พี่ดล",null,{skip:true}),
+        mk("draft","แบบร่าง","✏️","พี่ดล","2026-09-22"),
+        mk("delivery","นัดส่งงาน","📦","พี่ดล","2026-09-24"),
+        mk("system","งานระบบ (+3 วัน)","⚙️","พี่กร","2026-09-27"),
+        mk("entry","เข้างาน","🔑","พี่ตาล",null,{skip:true, note:"รอแจ้งวันเข้างาน"}),
+        mk("construction","ก่อสร้าง","🏗️","พี่ตาล",null,{skip:true}),
+        mk("opening","ฤกษ์เปิด","🙏","หลวงพ่อ","2026-12-01")
+      ]},
+    { id:"phuket", order:3, owner:"พี่ดล", month:"กันยายน 2569", monthKey:"2026-09", name:"ภูเก็ต", emoji:"🏝️", notes:"", photos:[],
+      stages:[
+        mk("start","เริ่มงาน","🚦","พี่ดล",null,{skip:true}),
+        mk("draft","แบบร่าง","✏️","พี่ดล","2026-09-26"),
+        mk("delivery","นัดส่งงาน","📦","พี่ดล","2026-09-30"),
+        mk("system","งานระบบ (+3 วัน)","⚙️","พี่กร","2026-10-03"),
+        mk("entry","เข้างาน","🔑","พี่ตาล",null,{skip:true}),
+        mk("construction","ก่อสร้าง","🏗️","พี่ตาล",null,{skip:true}),
+        mk("opening","ฤกษ์เปิด","🙏","หลวงพ่อ","2026-11-21")
+      ]},
+    { id:"krabi", order:4, owner:"พี่ดล", month:"ตุลาคม 2569", monthKey:"2026-10", name:"กระบี่", emoji:"⛰️", notes:"", photos:[],
+      stages:[
+        mk("start","เริ่มงาน","🚦","พี่ดล",null,{skip:true}),
+        mk("draft","แบบร่าง","✏️","พี่ดล","2026-10-05"),
+        mk("delivery","นัดส่งงาน","📦","พี่ดล","2026-10-15"),
+        mk("system","งานระบบ (+3 วัน)","⚙️","พี่กร","2026-10-18"),
+        mk("entry","เข้างาน","🔑","พี่ตาล",null,{skip:true}),
+        mk("construction","ก่อสร้าง","🏗️","พี่ตาล",null,{skip:true}),
+        mk("opening","ฤกษ์เปิด","🙏","หลวงพ่อ","2026-12-16")
+      ]},
+    { id:"office", order:5, owner:"พี่ดล", month:"ตุลาคม 2569", monthKey:"2026-10", name:"Office", emoji:"🏢", notes:"", photos:[],
+      stages:[
+        mk("start","เริ่มงาน","🚦","พี่ดล",null,{note:"เช็คอีกที"}),
+        mk("draft","แบบร่าง","✏️","พี่ดล","2026-10-28"),
+        mk("delivery","นัดส่งงาน","📦","พี่ดล","2026-10-30"),
+        mk("system","งานระบบ (+3 วัน)","⚙️","พี่กร",null,{note:"รอเติมข้อมูล"}),
+        mk("entry","เข้างาน","🔑","พี่ตาล",null,{skip:true}),
+        mk("construction","ก่อสร้าง","🏗️","พี่ตาล",null,{skip:true}),
+        mk("opening","ฤกษ์เปิด","🙏","หลวงพ่อ",null,{skip:true})
+      ]},
+    { id:"dental", order:6, owner:"พี่ดล", month:"มกราคม 2570", monthKey:"2027-01", name:"Dental", emoji:"🦷", notes:"", photos:[],
+      stages:[
+        mk("start","เริ่มงาน","🚦","พี่ดล",null,{note:"เช็คอีกที"}),
+        mk("draft","แบบร่าง","✏️","พี่ดล","2027-01-20"),
+        mk("delivery","นัดส่งงาน","📦","พี่ดล","2027-01-23"),
+        mk("system","งานระบบ (+3 วัน)","⚙️","พี่กร","2027-01-26"),
+        mk("entry","เข้างาน","🔑","พี่ตาล",null,{skip:true}),
+        mk("construction","ก่อสร้าง","🏗️","พี่ตาล",null,{skip:true}),
+        mk("opening","ฤกษ์เปิด","🙏","หลวงพ่อ","2027-03-01")
+      ]},
+    { id:"hatyai", order:7, owner:"คุณออย", month:"กันยายน 2569", monthKey:"2026-09", name:"หาดใหญ่", emoji:"🌆", notes:"", photos:[],
+      stages:[
+        mk("start","เริ่มงาน","🚦","คุณออย","2026-09-17",{done:true}),
+        mk("draft","แบบร่าง","✏️","คุณออย","2026-09-21"),
+        mk("delivery","นัดส่งงาน","📦","คุณออย","2026-09-24"),
+        mk("system","งานระบบ (+3 วัน)","⚙️","พี่กร","2026-09-27"),
+        mk("entry","เข้างาน","🔑","พี่ตาล",null,{skip:true}),
+        mk("construction","ก่อสร้าง","🏗️","พี่ตาล",null,{skip:true}),
+        mk("opening","ฤกษ์เปิด","🙏","หลวงพ่อ","2026-12-20")
+      ]}
+  ];
+
+  var HOLD_PROJECTS = [
+    { id:"bangyai", name:"บางใหญ่", emoji:"🏘️", lines:["พี่ดลปล่อยงานนี้แล้ว","พี่ตาลขอปล่อยเช่นกัน"] },
+    { id:"pattaya", name:"พัทยา", emoji:"🌊", lines:["พี่ดลปล่อยงานนี้แล้ว","นัดส่งงานเดิมประมาณ 2 เดือน","พี่ตาลขอปล่อยเช่นกัน"] }
+  ];
+
+  var STATUS_META = {
+    progress:{ label:"กำลังดำเนินการ", emoji:"🚧", fg:"var(--st-progress)", bg:"var(--st-progress-bg)" },
+    warning:{ label:"ใกล้ถึงกำหนด",   emoji:"⏰", fg:"var(--st-warning)",  bg:"var(--st-warning-bg)" },
+    danger:{  label:"ล่าช้า",         emoji:"🔥", fg:"var(--st-danger)",   bg:"var(--st-danger-bg)" },
+    success:{ label:"เสร็จสมบูรณ์",   emoji:"🎉", fg:"var(--st-success)",  bg:"var(--st-success-bg)" },
+    pending:{ label:"รอข้อมูล",       emoji:"❓", fg:"var(--st-pending)",  bg:"var(--st-pending-bg)" },
+    hold:{    label:"พักโครงการ",     emoji:"⏸️", fg:"var(--st-hold)",     bg:"var(--st-hold-bg)" }
+  };
+  var STATUS_ORDER = ["progress","warning","danger","success","pending","hold"];
+  var PROJECT_EMOJI_CHOICES = ["🏬","🛕","🏝️","⛰️","🏢","🦷","🌆","🏘️","🌊","🏪","🛍️","🏭","🏠","🏥","☕","🍜"];
+  var THAI_MONTHS = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+
+  var state = {
+    projects: JSON.parse(JSON.stringify(SEED_PROJECTS)),
+    team: JSON.parse(JSON.stringify(SEED_TEAM)),
+    ownerFilter: "all",
+    statusFilter: "all",
+    query: "",
+    canWrite: false,
+    canUpload: false,
+    projectsFromDb: false,
+    teamFromDb: false,
+    adminTab: "project",
+    viewMode: "cards",
+    newProjectEmoji: PROJECT_EMOJI_CHOICES[0]
+  };
+
+  function todayStart(){ var d = new Date(); d.setHours(0,0,0,0); return d; }
+  function parseISO(s){ if(!s) return null; var p = s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function diffDays(a,b){ return Math.round((a-b)/86400000); }
+  function fmtDateShort(iso){
+    if(!iso) return null;
+    var d = parseISO(iso);
+    var months = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+    return d.getDate()+" "+months[d.getMonth()];
+  }
+  function thaiMonthLabel(ym){ var p=ym.split("-"); var y=+p[0], m=+p[1]; return THAI_MONTHS[m-1]+" "+(y+543); }
+  function slugify(s){
+    var base = String(s||"").toLowerCase().replace(/[^a-z0-9ก-๙]+/g,"-").replace(/(^-|-$)/g,"");
+    return (base||"item") + "-" + Date.now().toString(36).slice(-5);
+  }
+  function findTeamByName(name){ for(var i=0;i<state.team.length;i++){ if(state.team[i].name===name) return state.team[i]; } return null; }
+  function colorKeyForOwner(name){ var t = findTeamByName(name); return t ? ROLE_META[t.role].color : "violet"; }
+
+  function computeStatus(project){
+    var today = todayStart();
+    var current = null;
+    for(var i=0;i<project.stages.length;i++){
+      var s = project.stages[i];
+      if(s.skip) continue;
+      if(!s.done){ current = s; break; }
+    }
+    if(!current) return { key:"success", stage:null };
+    if(!current.date) return { key:"pending", stage:current };
+    var d = diffDays(parseISO(current.date), today);
+    if(d < 0) return { key:"danger", stage:current, days:d };
+    if(d <= 3) return { key:"warning", stage:current, days:d };
+    return { key:"progress", stage:current, days:d };
+  }
+
+  function statusPillHTML(statusKey, stage){
+    var meta = STATUS_META[statusKey];
+    var extra = "";
+    if(statusKey==="warning" && stage && stage.date){
+      var d = diffDays(parseISO(stage.date), todayStart());
+      extra = d===0 ? " · วันนี้" : (" · อีก "+d+" วัน");
+    }
+    if(statusKey==="danger" && stage && stage.date){
+      var d2 = diffDays(parseISO(stage.date), todayStart());
+      extra = " · ช้าไป "+Math.abs(d2)+" วัน";
+    }
+    return '<span class="status-pill" style="--pill-fg:'+meta.fg+';--pill-bg:'+meta.bg+'">'+meta.emoji+' '+meta.label+extra+'</span>';
+  }
+
+  function showToast(msg){
+    var host = document.getElementById("toastHost");
+    var el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = msg;
+    host.innerHTML = "";
+    host.appendChild(el);
+    setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 3200);
+  }
+  function blockedWrite(){
+    showToast("โหมดอ่านอย่างเดียว แก้ไขไม่ได้ตอนนี้ 🔒 กด \"ลองเชื่อมต่อใหม่\" ด้านบนได้เลย");
+  }
+
+  /* ============== render ============== */
+  function renderAll(){
+    var t = todayStart();
+    document.getElementById("todayLabel").textContent = fmtDateShort(t.toISOString().slice(0,10)) + " " + (t.getFullYear()+543);
+    renderKPIs();
+    renderOverview();
+    renderFilters();
+    renderBoard();
+    renderHold();
+  }
+
+  function visibleProjects(){
+    return state.projects.filter(function(p){
+      if(state.ownerFilter!=="all" && p.owner!==state.ownerFilter) return false;
+      var st = computeStatus(p).key;
+      if(state.statusFilter!=="all" && st!==state.statusFilter) return false;
+      if(state.query && p.name.toLowerCase().indexOf(state.query.toLowerCase())===-1) return false;
+      return true;
+    });
+  }
+
+  function renderKPIs(){
+    var all = state.projects;
+    var counts = {progress:0,warning:0,danger:0,success:0,pending:0};
+    all.forEach(function(p){ counts[computeStatus(p).key]++; });
+    var tiles = [
+      {key:"all", emoji:"📋", label:"โครงการทั้งหมด", num:all.length, color:"var(--ink)"},
+      {key:"progress", emoji:"🚧", label:"กำลังดำเนินการ", num:counts.progress, color:"var(--st-progress)"},
+      {key:"warning", emoji:"⏰", label:"ใกล้ถึงกำหนด", num:counts.warning, color:"var(--st-warning)"},
+      {key:"danger", emoji:"🔥", label:"ล่าช้า", num:counts.danger, color:"var(--st-danger)"},
+      {key:"success", emoji:"🎉", label:"เสร็จสมบูรณ์", num:counts.success, color:"var(--st-success)"},
+      {key:"pending", emoji:"❓", label:"รอข้อมูล", num:counts.pending, color:"var(--st-pending)"}
+    ];
+    var html = tiles.map(function(t){
+      var active = (t.key==="all" && state.statusFilter==="all") || state.statusFilter===t.key;
+      return '<div class="kpi'+(active?' is-active':'')+'" style="--kpi-color:'+t.color+'" data-status="'+t.key+'">'+
+        '<div class="kpi-top"><span class="kpi-emoji">'+t.emoji+'</span></div>'+
+        '<span class="kpi-num" style="color:'+t.color+'">'+t.num+'</span>'+
+        '<span class="kpi-label">'+t.label+'</span></div>';
+    }).join("");
+    var el = document.getElementById("kpis");
+    el.innerHTML = html;
+    el.querySelectorAll(".kpi").forEach(function(node){
+      node.addEventListener("click", function(){
+        var k = node.getAttribute("data-status");
+        state.statusFilter = (k==="all") ? "all" : (state.statusFilter===k ? "all" : k);
+        renderAll();
+      });
+    });
+  }
+
+  function renderOverview(){
+    var all = state.projects;
+    var counts = {};
+    STATUS_ORDER.forEach(function(k){ counts[k]=0; });
+    all.forEach(function(p){ counts[computeStatus(p).key]++; });
+    var total = all.length || 1;
+    var track = document.getElementById("overviewTrack");
+    track.innerHTML = STATUS_ORDER.filter(function(k){return k!=="hold";}).map(function(k){
+      var meta = STATUS_META[k];
+      var w = (counts[k]/total*100);
+      if(w<=0) return "";
+      return '<div class="overview-seg" style="width:'+w+'%;background:'+meta.fg+'" title="'+meta.label+': '+counts[k]+'"></div>';
+    }).join("");
+    document.getElementById("overviewTotal").textContent = "ทั้งหมด "+all.length+" สาขาที่กำลังดำเนินการ";
+    var legend = document.getElementById("overviewLegend");
+    legend.innerHTML = STATUS_ORDER.filter(function(k){return k!=="hold";}).map(function(k){
+      var meta = STATUS_META[k];
+      return '<span class="legend-item"><span class="legend-swatch" style="background:'+meta.fg+'"></span>'+meta.emoji+' '+meta.label+' ('+counts[k]+')</span>';
+    }).join("");
+  }
+
+  function renderFilters(){
+    var seen = {}; var ownerNames = [];
+    state.projects.forEach(function(p){ if(!seen[p.owner]){ seen[p.owner]=true; ownerNames.push(p.owner); } });
+    var owners = [{key:"all", label:"ทั้งหมด", icon:"🗂️"}].concat(ownerNames.map(function(n){
+      var t = findTeamByName(n);
+      return { key:n, label:n, icon: t ? ROLE_META[t.role].icon : "🧑" };
+    }));
+    var oEl = document.getElementById("ownerFilters");
+    oEl.innerHTML = owners.map(function(o){
+      return '<button class="chip'+(state.ownerFilter===o.key?' is-on':'')+'" data-owner="'+esc(o.key)+'">'+o.icon+' '+esc(o.label)+'</button>';
+    }).join("");
+    oEl.querySelectorAll(".chip").forEach(function(btn){
+      btn.addEventListener("click", function(){ state.ownerFilter = btn.getAttribute("data-owner"); renderAll(); });
+    });
+
+    var statuses = [{key:"all", label:"ทุกสถานะ", emoji:"✨"}].concat(STATUS_ORDER.filter(function(k){return k!=="hold";}).map(function(k){
+      return {key:k, label:STATUS_META[k].label, emoji:STATUS_META[k].emoji};
+    }));
+    var sEl = document.getElementById("statusFilters");
+    sEl.innerHTML = statuses.map(function(s){
+      return '<button class="chip'+(state.statusFilter===s.key?' is-on':'')+'" data-status="'+s.key+'">'+s.emoji+' '+s.label+'</button>';
+    }).join("");
+    sEl.querySelectorAll(".chip").forEach(function(btn){
+      btn.addEventListener("click", function(){ state.statusFilter = btn.getAttribute("data-status"); renderAll(); });
+    });
+
+    var vEl = document.getElementById("viewToggle");
+    vEl.querySelectorAll(".chip").forEach(function(btn){
+      var v = btn.getAttribute("data-view");
+      btn.classList.toggle("is-on", state.viewMode===v);
+      btn.onclick = function(){ state.viewMode = v; renderAll(); };
+    });
+
+    var search = document.getElementById("searchInput");
+    if(document.activeElement !== search){ search.value = state.query; }
+  }
+
+  function stageRowHTML(project, stage){
+    var isCurrent = computeStatus(project).stage === stage;
+    var colorVar = stage.color ? COLOR_VAR[stage.color] : "var(--ink-muted)";
+    var chipBg = stage.color ? COLOR_BG[stage.color] : "var(--surface-3)";
+    var checkCls = "stage-check"+(stage.done?" is-done":"");
+    var dateVal = stage.date || "";
+    var dateDisplay = stage.date ? fmtDateShort(stage.date) : (stage.note || "—");
+    var rightHTML;
+    var ro = !state.canWrite;
+    if(stage.skip){
+      rightHTML = '<span class="stage-note">'+esc(dateDisplay)+'</span>'+
+        '<button class="stage-unskip" '+(ro?'disabled':'')+' data-action="unskip" data-key="'+stage.key+'" title="ระบุวันที่">+ วันที่</button>';
+    } else {
+      rightHTML = '<input class="stage-date" type="date" value="'+dateVal+'" '+(ro?'disabled':'')+' data-action="date" data-key="'+stage.key+'" title="'+esc(dateDisplay||"")+'">';
+    }
+    return (
+      '<div class="stage'+(isCurrent?' is-current':'')+'" data-key="'+stage.key+'">'+
+        '<button class="'+checkCls+'" style="--stage-color:'+colorVar+'" '+
+          ((stage.skip||ro)?'disabled':'')+' data-action="toggle" data-key="'+stage.key+'" aria-label="ทำเครื่องหมายเสร็จ">'+(stage.done?'✓':'')+'</button>'+
+        '<span class="stage-icon">'+stage.icon+'</span>'+
+        '<span class="stage-label">'+esc(stage.label)+(stage.note && stage.date ? '<small>'+esc(stage.note)+'</small>' : '')+'</span>'+
+        '<span class="stage-owner-chip" style="--chip-fg:'+colorVar+';--chip-bg:'+chipBg+'">'+esc(stage.owner)+'</span>'+
+        '<span class="stage-date-wrap">'+ rightHTML +'</span>'+
+      '</div>'
+    );
+  }
+
+  function photoSectionHTML(project){
+    var photos = project.photos || [];
+    var thumbs = photos.map(function(ph){
+      return '<div class="photo-thumb-wrap">'+
+        '<img class="photo-thumb" src="'+esc(ph.url)+'" data-action="view-photo" data-url="'+esc(ph.url)+'" alt="ความคืบหน้า">'+
+        (state.canUpload ? '<button class="photo-del" data-action="delete-photo" data-photo="'+esc(ph.id)+'" title="ลบรูป">✕</button>' : '') +
+      '</div>';
+    }).join("");
+    var addBtn = state.canUpload ?
+      '<label class="photo-add" title="อัพโหลดรูปความคืบหน้า">📷<span>+ รูป</span><input type="file" accept="image/*" multiple hidden data-action="upload-photo"></label>' : "";
+    return (
+      '<div class="photo-section">'+
+        '<div class="photo-head"><label>📷 ความคืบหน้างาน'+(photos.length?' ('+photos.length+')':'')+'</label></div>'+
+        '<div class="photo-strip">'+ thumbs + addBtn + (!photos.length && !state.canUpload ? '<span class="hint">ยังไม่มีรูป</span>' : '') +'</div>'+
+      '</div>'
+    );
+  }
+
+  function cardHTML(project){
+    var status = computeStatus(project);
+    var accent = COLOR_VAR[colorKeyForOwner(project.owner)];
+    return (
+      '<article class="card" style="--card-accent:'+accent+'" data-id="'+esc(project.id)+'">'+
+        '<div class="card-head">'+
+          '<div class="card-title">'+
+            '<span class="card-emoji">'+project.emoji+'</span>'+
+            '<div><h4>'+esc(project.name)+'</h4><div class="card-owner">'+esc(project.owner)+' · '+esc(project.month)+'</div></div>'+
+          '</div>'+
+          '<div class="card-head-right">'+
+            statusPillHTML(status.key, status.stage)+
+            '<button class="card-del" '+(!state.canWrite?'disabled':'')+' data-action="delete-project" title="ลบโครงการ">🗑️</button>'+
+          '</div>'+
+        '</div>'+
+        '<div class="stage-row">'+ project.stages.map(function(s){ return stageRowHTML(project,s); }).join("") +'</div>'+
+        photoSectionHTML(project)+
+        '<div class="card-notes">'+
+          '<label>📝 บันทึกเพิ่มเติม</label>'+
+          '<textarea data-action="notes" '+(!state.canWrite?'readonly':'')+' placeholder="เช่น รออนุมัติแบบ, ติดปัญหาไฟฟ้า…">'+ esc(project.notes||"") +'</textarea>'+
+        '</div>'+
+      '</article>'
+    );
+  }
+
+  function renderBoard(){
+    if(state.viewMode==="table") renderTableBoard(); else renderCardsBoard();
+  }
+
+  function renderTableBoard(){
+    var list = visibleProjects();
+    var board = document.getElementById("board");
+    if(!list.length){
+      board.innerHTML = '<div class="empty-msg">ไม่พบสาขาที่ตรงกับตัวกรอง 🔍</div>';
+      return;
+    }
+    list = list.slice().sort(function(a,b){
+      if(a.monthKey!==b.monthKey) return a.monthKey<b.monthKey?-1:1;
+      return a.order-b.order;
+    });
+    var cols = ["start","draft","delivery","system","entry","construction","opening"];
+    var colLabel = { start:"เริ่มงาน", draft:"แบบร่าง", delivery:"นัดส่งงาน", system:"งานระบบ", entry:"เข้างาน", construction:"ก่อสร้าง", opening:"ฤกษ์เปิด" };
+    var rows = list.map(function(p){
+      var status = computeStatus(p);
+      var cells = cols.map(function(key){
+        var s = findStage(p,key);
+        if(!s || s.skip) return '<td class="table-cell-muted">–</td>';
+        var text = s.date ? fmtDateShort(s.date) : (s.note || "รอข้อมูล");
+        return '<td'+(s.done?' class="table-cell-done"':'')+'>'+(s.done?'✅ ':'')+esc(text)+'</td>';
+      }).join("");
+      return '<tr>'+
+        '<td class="table-name">'+p.emoji+' '+esc(p.name)+'</td>'+
+        '<td class="table-cell-muted">'+esc(p.month)+'</td>'+
+        '<td class="table-cell-muted">'+esc(p.owner)+'</td>'+
+        '<td>'+statusPillHTML(status.key, status.stage)+'</td>'+
+        cells+
+        '<td class="table-cell-muted">'+((p.photos&&p.photos.length)?('📷 '+p.photos.length):'—')+'</td>'+
+      '</tr>';
+    }).join("");
+    var head = '<tr><th>สาขา</th><th>เดือน</th><th>ผู้รับผิดชอบ</th><th>สถานะ</th>'+
+      cols.map(function(k){ return '<th>'+colLabel[k]+'</th>'; }).join("")+
+      '<th>รูป</th></tr>';
+    board.innerHTML = '<div class="table-wrap"><table><thead>'+head+'</thead><tbody>'+rows+'</tbody></table></div>';
+  }
+
+  function renderCardsBoard(){
+    var list = visibleProjects();
+    var board = document.getElementById("board");
+    if(!list.length){
+      board.innerHTML = '<div class="empty-msg">ไม่พบสาขาที่ตรงกับตัวกรอง 🔍</div>';
+      return;
+    }
+    var byMonth = {}; var order = []; var monthLabel = {};
+    list.forEach(function(p){
+      if(!byMonth[p.monthKey]){ byMonth[p.monthKey]=[]; order.push(p.monthKey); }
+      byMonth[p.monthKey].push(p);
+      monthLabel[p.monthKey]=p.month;
+    });
+    order.sort();
+
+    board.innerHTML = order.map(function(mkKey){
+      var items = byMonth[mkKey].sort(function(a,b){ return a.order-b.order; });
+      return (
+        '<section class="month-group">'+
+          '<div class="month-head"><h3>🗓️ '+esc(monthLabel[mkKey])+'</h3><span class="count">'+items.length+' สาขา</span><div class="month-line"></div></div>'+
+          '<div class="card-grid">'+ items.map(cardHTML).join("") +'</div>'+
+        '</section>'
+      );
+    }).join("");
+
+    board.querySelectorAll("[data-action='toggle']").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        if(!state.canWrite){ blockedWrite(); return; }
+        var card = btn.closest(".card");
+        toggleStage(card.getAttribute("data-id"), btn.getAttribute("data-key"));
+      });
+    });
+    board.querySelectorAll("[data-action='date']").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        if(!state.canWrite){ blockedWrite(); return; }
+        var card = inp.closest(".card");
+        setStageDate(card.getAttribute("data-id"), inp.getAttribute("data-key"), inp.value);
+      });
+    });
+    board.querySelectorAll("[data-action='unskip']").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        if(!state.canWrite){ blockedWrite(); return; }
+        var card = btn.closest(".card");
+        unskipStage(card.getAttribute("data-id"), btn.getAttribute("data-key"));
+      });
+    });
+    board.querySelectorAll("[data-action='notes']").forEach(function(ta){
+      var timer;
+      ta.addEventListener("input", function(){
+        if(!state.canWrite) return;
+        var card = ta.closest(".card");
+        var id = card.getAttribute("data-id");
+        clearTimeout(timer);
+        timer = setTimeout(function(){ setNotes(id, ta.value); }, 500);
+      });
+    });
+    board.querySelectorAll("[data-action='upload-photo']").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        var card = inp.closest(".card");
+        var id = card.getAttribute("data-id");
+        if(inp.files && inp.files.length) uploadPhotos(id, inp.files);
+        inp.value = "";
+      });
+    });
+    board.querySelectorAll("[data-action='view-photo']").forEach(function(img){
+      img.addEventListener("click", function(){ openLightbox(img.getAttribute("data-url")); });
+    });
+    board.querySelectorAll("[data-action='delete-photo']").forEach(function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        var card = btn.closest(".card");
+        deletePhoto(card.getAttribute("data-id"), btn.getAttribute("data-photo"));
+      });
+    });
+    board.querySelectorAll("[data-action='delete-project']").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        if(!state.canWrite){ blockedWrite(); return; }
+        if(btn.classList.contains("is-confirm")){
+          var card = btn.closest(".card");
+          deleteProject(card.getAttribute("data-id"));
+        } else {
+          btn.classList.add("is-confirm");
+          btn.textContent = "ยืนยันลบ?";
+          setTimeout(function(){ btn.classList.remove("is-confirm"); btn.textContent="🗑️"; }, 3500);
+        }
+      });
+    });
+  }
+
+  function renderHold(){
+    var el = document.getElementById("holdCards");
+    el.innerHTML = HOLD_PROJECTS.map(function(h){
+      return '<div class="hold-card"><h5>'+h.emoji+' '+esc(h.name)+' '+statusPillHTML("hold",null)+'</h5>'+
+        h.lines.map(function(l){ return '<p>• '+esc(l)+'</p>'; }).join("") + '</div>';
+    }).join("");
+  }
+
+  /* ============== mutations: stages / notes ============== */
+  function findProject(id){ for(var i=0;i<state.projects.length;i++){ if(state.projects[i].id===id) return state.projects[i]; } return null; }
+  function findStage(p,key){ for(var i=0;i<p.stages.length;i++){ if(p.stages[i].key===key) return p.stages[i]; } return null; }
+
+  function toggleStage(id,key){
+    var p = findProject(id); if(!p) return;
+    var s = findStage(p,key); if(!s || s.skip) return;
+    s.done = !s.done;
+    renderAll();
+    persistProject(p);
+  }
+  function setStageDate(id,key,val){
+    var p = findProject(id); if(!p) return;
+    var s = findStage(p,key); if(!s) return;
+    s.date = val || null;
+    renderAll();
+    persistProject(p);
+  }
+  function unskipStage(id,key){
+    var p = findProject(id); if(!p) return;
+    var s = findStage(p,key); if(!s) return;
+    s.skip = false;
+    renderAll();
+    persistProject(p);
+  }
+  function setNotes(id,val){
+    var p = findProject(id); if(!p) return;
+    p.notes = val;
+    persistProject(p);
+  }
+
+  /* ============== mutations: projects / team ============== */
+  function addProject(data){
+    var id = slugify(data.name);
+    var stages = STAGE_DEFS.map(function(def){
+      var owner = data.owners[def.key];
+      var date = data.dates[def.key] || null;
+      return { key:def.key, label:def.label, icon:def.icon, owner:owner, color:colorKeyForOwner(owner),
+        date: date, done:false, skip: !date, note: null };
+    });
+    var primaryOwner = data.owners.draft || data.owners.start || state.team[0].name;
+    var project = {
+      id:id, order: Date.now(), owner: primaryOwner, month: data.monthLabel, monthKey: data.monthKey,
+      name: data.name, emoji: data.emoji, notes:"", photos:[], stages: stages
+    };
+    state.projects.push(project);
+    renderAll();
+    if(dbApi){
+      dbApi.collection("projects").doc(id).set(project).catch(function(){ showToast("บันทึกโครงการใหม่ไม่สำเร็จ"); });
+    }
+    showToast("เพิ่มสาขา “"+data.name+"” แล้ว 🎉");
+  }
+  function deleteProject(id){
+    state.projects = state.projects.filter(function(p){ return p.id!==id; });
+    renderAll();
+    if(dbApi){ dbApi.collection("projects").doc(id).delete().catch(function(){}); }
+    showToast("ลบโครงการแล้ว");
+  }
+  function addTeamMember(name, role){
+    var id = slugify(name);
+    var member = { id:id, name:name, role:role };
+    state.team.push(member);
+    renderAdminBody();
+    if(dbApi){ dbApi.collection("team").doc(id).set({ name:name, role:role }).catch(function(){ showToast("เพิ่มคนทำไม่สำเร็จ"); }); }
+    showToast("เพิ่ม "+name+" เข้าทีมแล้ว 👋");
+  }
+
+  /* ============== persistence ============== */
+  var dbApi = null, assetsApi = null, downloadsApi = null;
+  function persistProject(p){
+    if(!dbApi) return;
+    dbApi.collection("projects").doc(p.id).update({ stages: p.stages, notes: p.notes||"", photos: p.photos||[] }).catch(function(){});
+  }
+
+  function uploadPhotos(projectId, fileList){
+    if(!assetsApi){ showToast("อัพโหลดรูปไม่ได้ในโหมดนี้"); return; }
+    var files = Array.prototype.slice.call(fileList);
+    showToast("กำลังอัพโหลดรูป "+files.length+" รูป…");
+    Promise.all(files.map(function(f){
+      return assetsApi.upload(f).then(function(r){ return { id:r.id, url:r.url, uploadedAt: new Date().toISOString() }; });
+    })).then(function(results){
+      var p = findProject(projectId); if(!p) return;
+      p.photos = (p.photos||[]).concat(results);
+      renderAll();
+      persistProject(p);
+      showToast("อัพโหลดรูปสำเร็จ ✅");
+    }).catch(function(){ showToast("อัพโหลดรูปไม่สำเร็จ"); });
+  }
+  function deletePhoto(projectId, photoId){
+    var p = findProject(projectId); if(!p) return;
+    p.photos = (p.photos||[]).filter(function(ph){ return ph.id!==photoId; });
+    renderAll();
+    persistProject(p);
+    if(assetsApi){ assetsApi.delete(photoId).catch(function(){}); }
+  }
+
+  function setLive(ok, label){
+    document.getElementById("liveDot").style.background = ok ? "var(--st-success)" : "var(--st-pending)";
+    document.getElementById("liveLabel").textContent = label;
+    var retryBtn = document.getElementById("retryConnBtn");
+    if(retryBtn){
+      retryBtn.classList.toggle("is-visible", !ok);
+      retryBtn.classList.remove("is-spinning");
+    }
+  }
+
+  var unsubProjects = null, unsubTeam = null, connecting = false;
+  function connectDb(){
+    if(connecting) return;
+    connecting = true;
+    var retryBtn = document.getElementById("retryConnBtn");
+    if(retryBtn) retryBtn.classList.add("is-spinning");
+
+    if(unsubProjects){ try{ unsubProjects(); }catch(e){} unsubProjects = null; }
+    if(unsubTeam){ try{ unsubTeam(); }catch(e){} unsubTeam = null; }
+
+    if(!(window.claude && typeof window.claude.use === "function")){
+      state.canWrite = false; state.canUpload = false;
+      setLive(false,"โหมดอ่านอย่างเดียว (ไม่มีการเชื่อมข้อมูล)"); renderAll(); connecting = false; return;
+    }
+    setLive(false, "กำลังเชื่อมต่อ…");
+    window.claude.use("db").then(function(db){
+      connecting = false;
+      if(!db){ state.canWrite = false; state.canUpload = false; setLive(false,"โหมดอ่านอย่างเดียว (ไม่ได้รับสิทธิ์เขียนข้อมูล)"); renderAll(); return; }
+      dbApi = db;
+      state.canWrite = true;
+      renderAll();
+      unsubProjects = db.collection("projects").onSnapshot(function(snap){
+        if(!snap.empty){
+          state.projects = snap.docs.map(function(d){
+            var data = d.data() || {};
+            return {
+              id:d.id, order: data.order||0, owner:data.owner||"", month:data.month||"", monthKey:data.monthKey||"",
+              name:data.name||d.id, emoji:data.emoji||"🏬", notes:data.notes||"", photos:data.photos||[],
+              stages: Array.isArray(data.stages) ? data.stages : []
+            };
+          });
+          state.projectsFromDb = true;
+        }
+        state.canWrite = true;
+        setLive(true, "ซิงก์แล้ว บันทึกอัตโนมัติ");
+        renderAll();
+      }, function(){
+        setLive(false, "โหมดอ่านอย่างเดียว (เชื่อมข้อมูลไม่สำเร็จ)");
+        state.canWrite = false;
+        renderAll();
+      });
+      unsubTeam = db.collection("team").onSnapshot(function(snap){
+        if(!snap.empty){
+          state.team = snap.docs.map(function(d){
+            var data = d.data() || {};
+            return { id:d.id, name:data.name||d.id, role: ROLE_META[data.role] ? data.role : "design" };
+          });
+          state.teamFromDb = true;
+        }
+        renderAll();
+        if(document.getElementById("adminBackdrop") && !document.getElementById("adminBackdrop").hidden) renderAdminBody();
+      }, function(){});
+    }).catch(function(){
+      connecting = false;
+      state.canWrite = false; state.canUpload = false; setLive(false,"โหมดอ่านอย่างเดียว"); renderAll();
+    });
+
+    if(window.claude.use){
+      window.claude.use("assets").then(function(a){
+        if(a){ assetsApi = a; state.canUpload = true; } else { state.canUpload = false; }
+        renderAll();
+      }).catch(function(){ state.canUpload = false; renderAll(); });
+
+      window.claude.use("downloads").then(function(d){
+        if(d) downloadsApi = d;
+      }).catch(function(){});
+    }
+  }
+  function initCapabilities(){ connectDb(); }
+
+  /* ============== export ============== */
+  function csvField(v){
+    var s = String(v==null?"":v);
+    if(/[",\n]/.test(s)) s = '"'+s.replace(/"/g,'""')+'"';
+    return s;
+  }
+  function buildCSV(list){
+    list = list.slice().sort(function(a,b){
+      if(a.monthKey!==b.monthKey) return a.monthKey<b.monthKey?-1:1;
+      return a.order-b.order;
+    });
+    var cols = ["start","draft","delivery","system","entry","construction","opening"];
+    var colLabel = { start:"เริ่มงาน", draft:"แบบร่าง", delivery:"นัดส่งงาน", system:"งานระบบ", entry:"เข้างาน", construction:"ก่อสร้าง", opening:"ฤกษ์เปิด" };
+    var header = ["สาขา","เดือน","ผู้รับผิดชอบ","สถานะ"].concat(cols.map(function(k){ return colLabel[k]; })).concat(["จำนวนรูป","บันทึกเพิ่มเติม"]);
+    var lines = [header.map(csvField).join(",")];
+    list.forEach(function(p){
+      var status = computeStatus(p);
+      var row = [p.name, p.month, p.owner, STATUS_META[status.key].label];
+      cols.forEach(function(key){
+        var s = findStage(p,key);
+        if(!s || s.skip){ row.push(""); return; }
+        var text = s.date ? s.date : (s.note||"รอข้อมูล");
+        row.push((s.done?"เสร็จ: ":"") + text);
+      });
+      row.push(p.photos ? p.photos.length : 0);
+      row.push(p.notes||"");
+      lines.push(row.map(csvField).join(","));
+    });
+    return "﻿" + lines.join("\r\n");
+  }
+  function exportCSV(){
+    var list = visibleProjects();
+    if(!list.length){ showToast("ไม่มีข้อมูลให้ export"); return; }
+    var csv = buildCSV(list);
+    var filename = "ไทม์ไลน์เปิดสาขา-"+todayStart().toISOString().slice(0,10)+".csv";
+    if(downloadsApi){
+      downloadsApi.save({ filename:filename, data:csv }).then(function(){
+        showToast("บันทึกไฟล์ CSV แล้ว ✅");
+      }).catch(function(err){
+        if(err && err.code==="declined") return;
+        showToast("Export ไม่สำเร็จ");
+      });
+      return;
+    }
+    /* fallback for plain static hosting (e.g. GitHub Pages) where window.claude is absent */
+    try{
+      var blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+      showToast("ดาวน์โหลดไฟล์ CSV แล้ว ✅");
+    }catch(e){
+      showToast("Export ไม่สำเร็จ");
+    }
+  }
+
+  /* ============== admin modal ============== */
+  function teamOptionsHTML(preferredRole, selected){
+    var sorted = state.team.slice().sort(function(a,b){
+      var ar = a.role===preferredRole?0:1, br = b.role===preferredRole?0:1;
+      return ar-br;
+    });
+    return sorted.map(function(t){
+      var sel = (selected ? t.name===selected : t.role===preferredRole && sorted[0].name===t.name);
+      return '<option value="'+esc(t.name)+'"'+(sel?" selected":"")+'>'+ROLE_META[t.role].icon+' '+esc(t.name)+'</option>';
+    }).join("");
+  }
+
+  function renderAdminBody(){
+    var body = document.getElementById("adminModalBody");
+    if(!body) return;
+    if(state.adminTab==="project"){
+      body.innerHTML =
+        '<div class="field"><label>ชื่อสาขา / โครงการ</label><input class="input-text" id="npName" type="text" placeholder="เช่น สุราษฎร์ธานี"></div>'+
+        '<div class="field"><label>อีโมจิประจำสาขา</label><div class="emoji-pick" id="npEmojiPick">'+
+          PROJECT_EMOJI_CHOICES.map(function(em){ return '<button type="button" class="emoji-opt'+(em===state.newProjectEmoji?' is-on':'')+'" data-emoji="'+em+'">'+em+'</button>'; }).join("") +
+        '</div></div>'+
+        '<div class="form-2col"><div class="field"><label>เดือนเป้าหมาย</label><input class="input-date2" id="npMonth" type="month"></div></div>'+
+        '<div class="field"><label>กำหนดงานแต่ละขั้นตอน (ใส่วันที่เฉพาะขั้นที่รู้แล้ว)</label>'+
+          '<div class="stage-form-list">'+
+            STAGE_DEFS.map(function(def){
+              return '<div class="stage-form-row">'+
+                '<span class="sfr-icon">'+def.icon+'</span>'+
+                '<span class="sfr-label">'+def.label+'</span>'+
+                '<select class="sfr-select" data-owner-for="'+def.key+'">'+teamOptionsHTML(def.role)+'</select>'+
+                '<input class="sfr-date" type="date" data-date-for="'+def.key+'">'+
+              '</div>';
+            }).join("") +
+          '</div>'+
+        '</div>'+
+        '<div style="display:flex; gap:10px; justify-content:flex-end;">'+
+          '<button class="btn-primary" id="npSubmit">➕ เพิ่มโครงการ</button>'+
+        '</div>';
+
+      body.querySelectorAll(".emoji-opt").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          state.newProjectEmoji = btn.getAttribute("data-emoji");
+          body.querySelectorAll(".emoji-opt").forEach(function(b){ b.classList.remove("is-on"); });
+          btn.classList.add("is-on");
+        });
+      });
+      document.getElementById("npSubmit").addEventListener("click", function(){
+        var name = document.getElementById("npName").value.trim();
+        var monthVal = document.getElementById("npMonth").value;
+        if(!name){ showToast("กรุณาใส่ชื่อสาขา"); return; }
+        if(!monthVal){ showToast("กรุณาเลือกเดือนเป้าหมาย"); return; }
+        var owners = {}, dates = {};
+        STAGE_DEFS.forEach(function(def){
+          owners[def.key] = body.querySelector('[data-owner-for="'+def.key+'"]').value;
+          dates[def.key] = body.querySelector('[data-date-for="'+def.key+'"]').value;
+        });
+        addProject({ name:name, emoji: state.newProjectEmoji, monthKey: monthVal, monthLabel: thaiMonthLabel(monthVal), owners:owners, dates:dates });
+        closeAdmin();
+      });
+    } else {
+      body.innerHTML =
+        '<div class="field"><label>คนทำงานทั้งหมด</label><div class="team-list" id="teamListWrap">'+
+          state.team.map(function(t){
+            return '<div class="team-row"><span class="team-swatch" style="background:'+COLOR_VAR[ROLE_META[t.role].color]+'"></span>'+
+              '<span class="team-name">'+esc(t.name)+'</span><span class="team-role">'+ROLE_META[t.role].icon+' '+ROLE_META[t.role].label+'</span></div>';
+          }).join("") +
+        '</div></div>'+
+        '<div class="field"><label>เพิ่มคนทำใหม่</label>'+
+          '<div class="add-team-form">'+
+            '<div class="field"><label>ชื่อ</label><input class="input-text" id="ntName" type="text" placeholder="เช่น น้องมิ้นท์"></div>'+
+            '<div class="field"><label>บทบาท</label><select class="input-select" id="ntRole">'+
+              Object.keys(ROLE_META).map(function(r){ return '<option value="'+r+'">'+ROLE_META[r].icon+' '+ROLE_META[r].label+'</option>'; }).join("") +
+            '</select></div>'+
+            '<button class="btn-primary" id="ntSubmit">➕ เพิ่มคนทำ</button>'+
+          '</div>'+
+          '<div class="hint">บทบาทจะกำหนดสีประจำตัวและช่วยเลือกในฟอร์มเพิ่มโครงการอัตโนมัติ</div>'+
+        '</div>';
+      document.getElementById("ntSubmit").addEventListener("click", function(){
+        var name = document.getElementById("ntName").value.trim();
+        var role = document.getElementById("ntRole").value;
+        if(!name){ showToast("กรุณาใส่ชื่อคนทำ"); return; }
+        addTeamMember(name, role);
+        document.getElementById("ntName").value = "";
+      });
+    }
+  }
+
+  function openAdmin(){
+    var backdrop = document.getElementById("adminBackdrop");
+    backdrop.innerHTML =
+      '<div class="modal" role="dialog" aria-modal="true">'+
+        '<div class="modal-head"><h2>🔧 หลังบ้าน</h2><button class="modal-close" id="adminCloseBtn">✕</button></div>'+
+        '<div class="modal-tabs">'+
+          '<button class="tab-btn'+(state.adminTab==="project"?' is-on':'')+'" data-tab="project">➕ เพิ่มโครงการใหม่</button>'+
+          '<button class="tab-btn'+(state.adminTab==="team"?' is-on':'')+'" data-tab="team">👥 ทีมงาน</button>'+
+        '</div>'+
+        '<div class="modal-body" id="adminModalBody"></div>'+
+      '</div>';
+    backdrop.hidden = false;
+    document.getElementById("adminCloseBtn").addEventListener("click", closeAdmin);
+    backdrop.addEventListener("click", function(e){ if(e.target===backdrop) closeAdmin(); });
+    backdrop.querySelectorAll(".tab-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.adminTab = btn.getAttribute("data-tab");
+        backdrop.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.toggle("is-on", b===btn); });
+        renderAdminBody();
+      });
+    });
+    renderAdminBody();
+    document.addEventListener("keydown", escCloseAdmin);
+  }
+  function escCloseAdmin(e){ if(e.key==="Escape") closeAdmin(); }
+  function closeAdmin(){
+    var backdrop = document.getElementById("adminBackdrop");
+    backdrop.hidden = true;
+    backdrop.innerHTML = "";
+    document.removeEventListener("keydown", escCloseAdmin);
+  }
+  document.getElementById("openAdminBtn").addEventListener("click", openAdmin);
+  document.getElementById("exportBtn").addEventListener("click", exportCSV);
+  document.getElementById("retryConnBtn").addEventListener("click", function(){
+    /* window.claude.use() is memoized per page load — calling it again
+       returns the exact same cached promise/result, so re-invoking
+       connectDb() here cannot recover a capability that came back null.
+       The only real recovery is a fresh page load (a fresh handshake
+       with the host), so reload the whole page instead. */
+    showToast("กำลังโหลดหน้าใหม่เพื่อเชื่อมต่อ… 🔄");
+    setTimeout(function(){ location.reload(); }, 400);
+  });
+
+  function openLightbox(url){
+    var lb = document.getElementById("lightboxBackdrop");
+    lb.innerHTML = '<button class="lightbox-close" id="lbClose">✕</button><img class="lightbox-img" src="'+esc(url)+'" alt="ความคืบหน้างาน">';
+    lb.hidden = false;
+    lb.addEventListener("click", function(e){ if(e.target===lb || e.target.id==="lbClose") closeLightbox(); }, { once:true });
+    document.addEventListener("keydown", escCloseLightbox);
+  }
+  function escCloseLightbox(e){ if(e.key==="Escape") closeLightbox(); }
+  function closeLightbox(){
+    var lb = document.getElementById("lightboxBackdrop");
+    lb.hidden = true; lb.innerHTML = "";
+    document.removeEventListener("keydown", escCloseLightbox);
+  }
+
+  document.getElementById("searchInput").addEventListener("input", function(e){
+    state.query = e.target.value;
+    renderBoard();
+  });
+
+  renderAll();
+  initCapabilities();
+})();
+</script>
+
+</body>
+</html>
