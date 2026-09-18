@@ -161,8 +161,8 @@
   .btn-admin:hover{opacity:.88;}
 
   /* ---------- KPI tiles ---------- */
-  .kpis{ display:grid; grid-template-columns:repeat(6,1fr); gap:10px; }
-  @media (max-width:900px){ .kpis{grid-template-columns:repeat(3,1fr);} }
+  .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:10px; }
+  @media (max-width:900px){ .kpis{grid-template-columns:repeat(4,1fr);} }
   @media (max-width:520px){ .kpis{grid-template-columns:repeat(2,1fr);} }
   .kpi{
     background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);
@@ -171,6 +171,8 @@
   }
   .kpi:hover{transform:translateY(-2px); border-color:var(--border-strong);}
   .kpi.is-active{outline:2px solid var(--kpi-color,var(--ink)); outline-offset:-2px;}
+  .kpi.kpi-static{cursor:default;}
+  .kpi.kpi-static:hover{transform:none; border-color:var(--border);}
   .kpi-top{display:flex; align-items:center; justify-content:space-between;}
   .kpi-emoji{font-size:19px;}
   .kpi-num{font-family:'Prompt',sans-serif; font-variant-numeric:tabular-nums; font-size:26px; font-weight:700; color:var(--ink);}
@@ -285,6 +287,25 @@
   }
   .card-notes textarea:focus{outline:none; border-color:var(--ink-muted); background:var(--surface);}
   .card-notes textarea:read-only{cursor:not-allowed; opacity:.6;}
+
+  /* ---------- Recruitment ---------- */
+  .recruit-section{display:flex; flex-direction:column; gap:6px;}
+  .recruit-head label{font-size:11px; color:var(--ink-muted); font-weight:600; letter-spacing:.02em;}
+  .recruit-list{display:flex; flex-direction:column; gap:5px; border:1px dashed var(--border-strong); border-radius:var(--radius-sm); padding:8px 10px; background:var(--surface-2);}
+  .recruit-row{display:flex; align-items:center; gap:7px; font-size:12px; flex-wrap:wrap;}
+  .recruit-row.is-filled{opacity:.55;}
+  .recruit-icon{font-size:14px; flex:none;}
+  .recruit-label{color:var(--ink); font-weight:600; flex:none; min-width:64px;}
+  .recruit-count{color:var(--ink-muted); font-variant-numeric:tabular-nums; margin-right:auto;}
+  .recruit-actions{display:flex; gap:5px; flex:none;}
+  .recruit-btn{
+    border:1px solid var(--border-strong); background:var(--surface); color:var(--ink);
+    font-size:10.5px; font-weight:600; border-radius:100px; padding:3px 9px; cursor:pointer; white-space:nowrap;
+    font-family:'Prompt',sans-serif;
+  }
+  .recruit-btn:hover:not(:disabled){border-color:var(--ink-muted); background:var(--surface-2);}
+  .recruit-btn:disabled{cursor:not-allowed; opacity:.4;}
+  .recruit-btn-undo{color:var(--ink-muted);}
 
   /* ---------- Photo gallery ---------- */
   .photo-section{display:flex; flex-direction:column; gap:6px;}
@@ -494,6 +515,39 @@
     { key:"opening", label:"ฤกษ์เปิด", icon:"🙏", role:"opening" }
   ];
 
+  var RECRUIT_ROLES_DEFAULT = [
+    { key:"manager",   label:"ผู้จัดการ",     icon:"👔", target:1 },
+    { key:"reception", label:"Reception",     icon:"🛎️", target:1 },
+    { key:"sales",     label:"เซลล์",         icon:"💼", target:4 },
+    { key:"nurse",     label:"พยาบาล",        icon:"💉", target:1 },
+    { key:"assistant", label:"ผู้ช่วยแพทย์",   icon:"🩺", target:1 },
+    { key:"bt",        label:"BT",            icon:"🧖", target:5 },
+    { key:"maid",      label:"แม่บ้าน",        icon:"🧹", target:1 }
+  ];
+  function defaultRecruitment(){
+    return RECRUIT_ROLES_DEFAULT.map(function(r){
+      return { key:r.key, label:r.label, icon:r.icon, target:r.target, remaining:r.target };
+    });
+  }
+  function normalizeRecruitment(list){
+    if(!list || !list.length) return defaultRecruitment();
+    var out = [];
+    for(var i=0;i<list.length;i++){
+      var r = list[i] || {};
+      var target = (typeof r.target==="number" && r.target>=0) ? r.target : 1;
+      var remaining = (typeof r.remaining==="number") ? r.remaining : target;
+      if(remaining<0) remaining = 0;
+      if(remaining>target) remaining = target;
+      out.push({ key:r.key||("role"+i), label:r.label||r.key||"ตำแหน่ง", icon:r.icon||"🧑‍💼", target:target, remaining:remaining });
+    }
+    return out;
+  }
+  function findRecruitRole(project, roleKey){
+    var list = project.recruitment || [];
+    for(var i=0;i<list.length;i++){ if(list[i].key===roleKey) return list[i]; }
+    return null;
+  }
+
   var OWNER_COLOR_SEED = { "พี่ดล":"violet", "คุณออย":"violet", "พี่กร":"sky", "พี่ตาล":"rose", "หลวงพ่อ":"gold" };
   function mk(key,label,icon,owner,date,opts){
     opts = opts || {};
@@ -605,6 +659,7 @@
     viewMode: "cards",
     newProjectEmoji: PROJECT_EMOJI_CHOICES[0]
   };
+  state.projects.forEach(function(p){ p.recruitment = normalizeRecruitment(p.recruitment); });
 
   function todayStart(){ var d = new Date(); d.setHours(0,0,0,0); return d; }
   function parseISO(s){ if(!s) return null; var p = s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
@@ -691,24 +746,27 @@
     var all = state.projects;
     var counts = {progress:0,warning:0,danger:0,success:0,pending:0};
     all.forEach(function(p){ counts[computeStatus(p).key]++; });
+    var recruitOpen = 0;
+    all.forEach(function(p){ (p.recruitment||[]).forEach(function(r){ recruitOpen += Math.max(0,r.remaining); }); });
     var tiles = [
       {key:"all", emoji:"📋", label:"โครงการทั้งหมด", num:all.length, color:"var(--ink)"},
       {key:"progress", emoji:"🚧", label:"กำลังดำเนินการ", num:counts.progress, color:"var(--st-progress)"},
       {key:"warning", emoji:"⏰", label:"ใกล้ถึงกำหนด", num:counts.warning, color:"var(--st-warning)"},
       {key:"danger", emoji:"🔥", label:"ล่าช้า", num:counts.danger, color:"var(--st-danger)"},
       {key:"success", emoji:"🎉", label:"เสร็จสมบูรณ์", num:counts.success, color:"var(--st-success)"},
-      {key:"pending", emoji:"❓", label:"รอข้อมูล", num:counts.pending, color:"var(--st-pending)"}
+      {key:"pending", emoji:"❓", label:"รอข้อมูล", num:counts.pending, color:"var(--st-pending)"},
+      {key:"recruit", emoji:"🧑‍💼", label:"ตำแหน่งที่ยังขาด", num:recruitOpen, color:"var(--st-hold)", static:true}
     ];
     var html = tiles.map(function(t){
-      var active = (t.key==="all" && state.statusFilter==="all") || state.statusFilter===t.key;
-      return '<div class="kpi'+(active?' is-active':'')+'" style="--kpi-color:'+t.color+'" data-status="'+t.key+'">'+
+      var active = !t.static && ((t.key==="all" && state.statusFilter==="all") || state.statusFilter===t.key);
+      return '<div class="kpi'+(active?' is-active':'')+(t.static?' kpi-static':'')+'" style="--kpi-color:'+t.color+'" data-status="'+t.key+'" title="'+(t.static?'รวมตำแหน่งงานที่ยังหาไม่ครบทุกสาขา':'')+'">'+
         '<div class="kpi-top"><span class="kpi-emoji">'+t.emoji+'</span></div>'+
         '<span class="kpi-num" style="color:'+t.color+'">'+t.num+'</span>'+
         '<span class="kpi-label">'+t.label+'</span></div>';
     }).join("");
     var el = document.getElementById("kpis");
     el.innerHTML = html;
-    el.querySelectorAll(".kpi").forEach(function(node){
+    el.querySelectorAll(".kpi:not(.kpi-static)").forEach(function(node){
       node.addEventListener("click", function(){
         var k = node.getAttribute("data-status");
         state.statusFilter = (k==="all") ? "all" : (state.statusFilter===k ? "all" : k);
@@ -820,6 +878,32 @@
     );
   }
 
+  function recruitmentSectionHTML(project){
+    var roles = project.recruitment || [];
+    var totalRemaining = 0;
+    var rows = roles.map(function(r){
+      var filled = r.remaining<=0;
+      totalRemaining += Math.max(0,r.remaining);
+      return (
+        '<div class="recruit-row'+(filled?' is-filled':'')+'">'+
+          '<span class="recruit-icon">'+r.icon+'</span>'+
+          '<span class="recruit-label">'+esc(r.label)+'</span>'+
+          '<span class="recruit-count">'+(filled ? 'ครบแล้ว ✅' : 'เหลือ '+r.remaining+'/'+r.target)+'</span>'+
+          '<div class="recruit-actions">'+
+            '<button class="recruit-btn" data-action="recruit-minus" data-role="'+esc(r.key)+'" '+((state.canWrite && r.remaining>0)?'':'disabled')+' title="รับเข้าเพิ่ม 1 คน">− รับแล้ว</button>'+
+            '<button class="recruit-btn recruit-btn-undo" data-action="recruit-plus" data-role="'+esc(r.key)+'" '+((state.canWrite && r.remaining<r.target)?'':'disabled')+' title="เพิ่มกลับ 1 คน (แก้ไขที่กดผิด)">+ คืน</button>'+
+          '</div>'+
+        '</div>'
+      );
+    }).join("");
+    return (
+      '<div class="recruit-section">'+
+        '<div class="recruit-head"><label>🧑‍💼 ตำแหน่งการสรรหา'+(totalRemaining ? ' · ขาด '+totalRemaining+' คน' : ' · ครบทุกตำแหน่งแล้ว 🎉')+'</label></div>'+
+        '<div class="recruit-list">'+ rows +'</div>'+
+      '</div>'
+    );
+  }
+
   function cardHTML(project){
     var status = computeStatus(project);
     var accent = COLOR_VAR[colorKeyForOwner(project.owner)];
@@ -836,6 +920,7 @@
           '</div>'+
         '</div>'+
         '<div class="stage-row">'+ project.stages.map(function(s){ return stageRowHTML(project,s); }).join("") +'</div>'+
+        recruitmentSectionHTML(project)+
         photoSectionHTML(project)+
         '<div class="card-notes">'+
           '<label>📝 บันทึกเพิ่มเติม</label>'+
@@ -870,6 +955,8 @@
         var text = s.date ? fmtDateShort(s.date) : (s.note || "รอข้อมูล");
         return '<td'+(s.done?' class="table-cell-done"':'')+'>'+(s.done?'✅ ':'')+esc(text)+'</td>';
       }).join("");
+      var recruitOpen = 0;
+      (p.recruitment||[]).forEach(function(r){ recruitOpen += Math.max(0,r.remaining); });
       return '<tr>'+
         '<td class="table-name">'+p.emoji+' '+esc(p.name)+'</td>'+
         '<td class="table-cell-muted">'+esc(p.month)+'</td>'+
@@ -877,11 +964,12 @@
         '<td>'+statusPillHTML(status.key, status.stage)+'</td>'+
         cells+
         '<td class="table-cell-muted">'+((p.photos&&p.photos.length)?('📷 '+p.photos.length):'—')+'</td>'+
+        '<td class="table-cell-muted">'+(recruitOpen ? ('🧑‍💼 ขาด '+recruitOpen) : 'ครบแล้ว ✅')+'</td>'+
       '</tr>';
     }).join("");
     var head = '<tr><th>สาขา</th><th>เดือน</th><th>ผู้รับผิดชอบ</th><th>สถานะ</th>'+
       cols.map(function(k){ return '<th>'+colLabel[k]+'</th>'; }).join("")+
-      '<th>รูป</th></tr>';
+      '<th>รูป</th><th>ตำแหน่งงาน</th></tr>';
     board.innerHTML = '<div class="table-wrap"><table><thead>'+head+'</thead><tbody>'+rows+'</tbody></table></div>';
   }
 
@@ -939,6 +1027,20 @@
         var id = card.getAttribute("data-id");
         clearTimeout(timer);
         timer = setTimeout(function(){ setNotes(id, ta.value); }, 500);
+      });
+    });
+    board.querySelectorAll("[data-action='recruit-minus']").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        if(!state.canWrite){ blockedWrite(); return; }
+        var card = btn.closest(".card");
+        adjustRecruit(card.getAttribute("data-id"), btn.getAttribute("data-role"), -1);
+      });
+    });
+    board.querySelectorAll("[data-action='recruit-plus']").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        if(!state.canWrite){ blockedWrite(); return; }
+        var card = btn.closest(".card");
+        adjustRecruit(card.getAttribute("data-id"), btn.getAttribute("data-role"), 1);
       });
     });
     board.querySelectorAll("[data-action='upload-photo']").forEach(function(inp){
@@ -1025,7 +1127,7 @@
     var primaryOwner = data.owners.draft || data.owners.start || state.team[0].name;
     var project = {
       id:id, order: Date.now(), owner: primaryOwner, month: data.monthLabel, monthKey: data.monthKey,
-      name: data.name, emoji: data.emoji, notes:"", photos:[], stages: stages
+      name: data.name, emoji: data.emoji, notes:"", photos:[], stages: stages, recruitment: defaultRecruitment()
     };
     state.projects.push(project);
     renderAll();
@@ -1053,7 +1155,24 @@
   var dbApi = null, assetsApi = null, downloadsApi = null;
   function persistProject(p){
     if(!dbApi) return;
-    dbApi.collection("projects").doc(p.id).update({ stages: p.stages, notes: p.notes||"", photos: p.photos||[] }).catch(function(){});
+    dbApi.collection("projects").doc(p.id).update({ stages: p.stages, notes: p.notes||"", photos: p.photos||[], recruitment: p.recruitment||[] }).catch(function(){});
+  }
+
+  function adjustRecruit(id, roleKey, delta){
+    var p = findProject(id); if(!p) return;
+    var role = findRecruitRole(p, roleKey); if(!role) return;
+    var next = role.remaining + delta;
+    if(next < 0) next = 0;
+    if(next > role.target) next = role.target;
+    if(next === role.remaining) return;
+    role.remaining = next;
+    renderAll();
+    persistProject(p);
+    if(delta < 0){
+      showToast(role.remaining===0 ? ("🎉 "+role.label+" ครบแล้ว!") : ("รับ "+role.label+" เพิ่ม 1 คน เหลืออีก "+role.remaining+" ตำแหน่ง"));
+    } else {
+      showToast("ปรับ "+role.label+" กลับเป็นเหลือ "+role.remaining+" ตำแหน่ง");
+    }
   }
 
   function uploadPhotos(projectId, fileList){
@@ -1116,7 +1235,8 @@
             return {
               id:d.id, order: data.order||0, owner:data.owner||"", month:data.month||"", monthKey:data.monthKey||"",
               name:data.name||d.id, emoji:data.emoji||"🏬", notes:data.notes||"", photos:data.photos||[],
-              stages: Array.isArray(data.stages) ? data.stages : []
+              stages: Array.isArray(data.stages) ? data.stages : [],
+              recruitment: normalizeRecruitment(data.recruitment)
             };
           });
           state.projectsFromDb = true;
@@ -1171,7 +1291,7 @@
     });
     var cols = ["start","draft","delivery","system","entry","construction","opening"];
     var colLabel = { start:"เริ่มงาน", draft:"แบบร่าง", delivery:"นัดส่งงาน", system:"งานระบบ", entry:"เข้างาน", construction:"ก่อสร้าง", opening:"ฤกษ์เปิด" };
-    var header = ["สาขา","เดือน","ผู้รับผิดชอบ","สถานะ"].concat(cols.map(function(k){ return colLabel[k]; })).concat(["จำนวนรูป","บันทึกเพิ่มเติม"]);
+    var header = ["สาขา","เดือน","ผู้รับผิดชอบ","สถานะ"].concat(cols.map(function(k){ return colLabel[k]; })).concat(["จำนวนรูป","ตำแหน่งที่ยังขาด","บันทึกเพิ่มเติม"]);
     var lines = [header.map(csvField).join(",")];
     list.forEach(function(p){
       var status = computeStatus(p);
@@ -1183,6 +1303,9 @@
         row.push((s.done?"เสร็จ: ":"") + text);
       });
       row.push(p.photos ? p.photos.length : 0);
+      var recruitParts = [];
+      (p.recruitment||[]).forEach(function(r){ if(r.remaining>0) recruitParts.push(r.label+":"+r.remaining); });
+      row.push(recruitParts.length ? recruitParts.join(", ") : "ครบแล้ว");
       row.push(p.notes||"");
       lines.push(row.map(csvField).join(","));
     });
